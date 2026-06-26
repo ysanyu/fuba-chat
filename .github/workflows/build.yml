@@ -20,6 +20,9 @@ jobs:
           - os: ubuntu-latest
             platform: linux
 
+    env:
+      ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install Linux dependencies (for .deb / .rpm)
         if: runner.os == 'Linux'
@@ -36,17 +40,19 @@ jobs:
           sudo apt-get install -y rpm libarchive-tools fakeroot
 
       - name: Install dependencies
-        run: npm install
-        env:
-          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
+        run: npm ci
 
       - name: Build (${{ matrix.platform }})
         run: npm run build:${{ matrix.platform }}
         env:
-          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: List build outputs
+        if: always()
+        run: ls -lhR releases/ || true
+
       - name: Upload artifacts
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.platform }}
@@ -57,11 +63,12 @@ jobs:
             releases/*.AppImage
             releases/*.deb
             releases/*.rpm
-            retention-days: 7
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: Release
-        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             releases/*.dmg
@@ -72,3 +79,4 @@ jobs:
             releases/*.rpm
           draft: true
           generate_release_notes: true
+          fail_on_unmatched_files: false
