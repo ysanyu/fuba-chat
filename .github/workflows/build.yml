@@ -10,6 +10,7 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: macos-latest
@@ -27,6 +28,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Install Linux dependencies (for .deb / .rpm)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm libarchive-tools fakeroot
 
       - name: Install dependencies
         run: npm install
@@ -50,6 +57,7 @@ jobs:
             releases/*.AppImage
             releases/*.deb
             releases/*.rpm
+            retention-days: 7
 
       - name: Release
         uses: softprops/action-gh-release@v2
