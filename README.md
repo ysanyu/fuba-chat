@@ -36,7 +36,9 @@
 
 ## 📸 截图
 
-> 截图待补充，欢迎 PR 提交
+<div align="center">
+  <img src="screenshot.png" width="700" alt="福利吧聊天室截图" />
+</div>
 
 ---
 
