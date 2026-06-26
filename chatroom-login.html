@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>福利吧聊天室</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #888;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .status.success {
+      display: block;
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.error {
+      display: block;
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .help-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.8;
+      display: none;
+    }
+
+    .help-box.show {
+      display: block;
+    }
+
+    .toggle-help {
+      background: none;
+      color: #667eea;
+      padding: 10px 0;
+      margin-top: 10px;
+      width: auto;
+      font-size: 13px;
+    }
+
+    .toggle-help:hover {
+      background: none;
+      transform: none;
+      box-shadow: none;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 福利吧聊天室</h1>
+    <p class="subtitle">Cookie 登录工具</p>
+
+    <div class="form-group">
+      <label for="cookies">请输入 Cookie：</label>
+      <textarea id="cookies" placeholder="例如：bbs_sid=xxxxx; bbs_auth=xxxxx; ..."></textarea>
+      <p class="help-text">
+        在浏览器登录福利吧后，按 F12 打开开发者工具，在 Console 中输入 <code>document.cookie</code> 复制输出的内容
+      </p>
+    </div>
+
+    <button onclick="openChatroom()">进入聊天室</button>
+
+    <button class="toggle-help" onclick="toggleHelp()">如何获取 Cookie？</button>
+
+    <div id="helpBox" class="help-box">
+      <h3>📖 获取 Cookie 教程：</h3>
+      <ol>
+        <li>在浏览器中登录 <a href="https://fuliba2023.net" target="_blank">福利吧论坛</a></li>
+        <li>按 <code>F12</code> 打开开发者工具</li>
+        <li>切换到 <code>Console</code> (控制台) 标签</li>
+        <li>输入 <code>document.cookie</code> 并回车</li>
+        <li>复制输出的完整 Cookie 字符串</li>
+        <li>粘贴到上方的文本框中</li>
+      </ol>
+      <p style="margin-top: 10px; color: #f00;"><strong>⚠️ 注意：Cookie 包含你的登录信息，请勿分享给他人！</strong></p>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    function setCookies(cookieString) {
+      const cookies = cookieString.split(';').map(c => c.trim()).filter(c => c);
+      
+      cookies.forEach(cookie => {
+        if (cookie) {
+          document.cookie = cookie;
+        }
+      });
+      
+      console.log('Cookies 已设置:', document.cookie);
+    }
+
+    function openChatroom() {
+      const cookieInput = document.getElementById('cookies').value.trim();
+      
+      if (!cookieInput) {
+        showStatus('error', '请输入 Cookie！');
+        return;
+      }
+
+      try {
+        // 设置 cookies
+        setCookies(cookieInput);
+        
+        showStatus('success', 'Cookie 设置成功！正在打开聊天室...');
+        
+        // 延迟打开页面，确保 cookies 已设置
+        setTimeout(() => {
+          // 在新窗口中打开论坛页面
+          const chatWindow = window.open('https://fuliba2023.net/forum.php', '_blank');
+          
+          if (chatWindow) {
+            // 注入脚本自动打开聊天室
+            setTimeout(() => {
+              try {
+                const launcher = chatWindow.document.getElementById('chatroom-launcher');
+                if (launcher) {
+                  launcher.click();
+                }
+              } catch (e) {
+                console.log('无法自动打开聊天室，请手动点击页面右下角的聊天室按钮');
+              }
+            }, 3000);
+            
+            showStatus('success', '聊天室已打开！如果聊天室未自动打开，请手动点击页面右下角的聊天室按钮。');
+          } else {
+            showStatus('error', '弹出窗口被阻止，请允许浏览器弹出窗口后重试！');
+          }
+        }, 500);
+        
+      } catch (err) {
+        showStatus('error', '设置 Cookie 失败：' + err.message);
+      }
+    }
+
+    function showStatus(type, message) {
+      const statusEl = document.getElementById('status');
+      statusEl.className = 'status ' + type;
+      statusEl.textContent = message;
+    }
+
+    function toggleHelp() {
+      const helpBox = document.getElementById('helpBox');
+      helpBox.classList.toggle('show');
+    }
+
+    // 保存 Cookie 到 localStorage（方便下次使用）
+    window.addEventListener('load', () => {
+      const savedCookies = localStorage.getItem('fuliba_cookies');
+      if (savedCookies) {
+        document.getElementById('cookies').value = savedCookies;
+      }
+    });
+
+    document.getElementById('cookies').addEventListener('change', (e) => {
+      localStorage.setItem('fuliba_cookies', e.target.value);
+    });
+  </script>
+</body>
+</html>

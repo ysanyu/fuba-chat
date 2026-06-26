@@ -1,0 +1,66 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            platform: mac
+          - os: windows-latest
+            platform: win
+          - os: ubuntu-latest
+            platform: linux
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        env:
+          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
+
+      - name: Build (${{ matrix.platform }})
+        run: npm run build:${{ matrix.platform }}
+        env:
+          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            releases/*.dmg
+            releases/*.zip
+            releases/*.exe
+            releases/*.AppImage
+            releases/*.deb
+            releases/*.rpm
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            releases/*.dmg
+            releases/*.zip
+            releases/*.exe
+            releases/*.AppImage
+            releases/*.deb
+            releases/*.rpm
+          draft: true
+          generate_release_notes: true
