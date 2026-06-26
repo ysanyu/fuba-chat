@@ -79,6 +79,6 @@ jobs:
             releases/*.AppImage
             releases/*.deb
             releases/*.rpm
-          draft: true
+          draft: false
           generate_release_notes: true
           fail_on_unmatched_files: false

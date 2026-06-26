@@ -4,7 +4,7 @@
 
 ### 一个简洁的福利吧论坛聊天室桌面客户端
 
-[![Version](https://img.shields.io/badge/version-1.0.0-667eea.svg)](https://github.com/ysanyu/fuba-chat/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-667eea.svg)](https://github.com/ysanyu/fuba-chat/releases)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue.svg)](https://github.com/ysanyu/fuba-chat/releases)
 [![Electron](https://img.shields.io/badge/built%20with-Electron-47848F.svg)](https://www.electronjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -54,17 +54,20 @@
 
 前往 [Releases 页面](https://github.com/ysanyu/fuba-chat/releases) 下载对应平台的安装包：
 
-| 平台 | 文件 |
-|------|------|
-| macOS (Apple Silicon) | `fuba-chat-1.0.0-arm64.dmg` |
-| macOS (Intel) | `fuba-chat-1.0.0.dmg` |
-| Windows | `fuba-chat-1.0.0.exe` |
-| Linux | `fuba-chat-1.0.0.AppImage` |
+| 平台 | 文件 | 说明 |
+|------|------|------|
+| macOS (Apple Silicon) | `fuliba-chat-1.0.0-arm64.dmg` | M1/M2/M3 芯片 |
+| macOS (Intel) | `fuliba-chat-1.0.0-x64.dmg` | Intel 芯片 |
+| Windows (安装版) | `fuliba-chat-1.0.0-x64-setup.exe` | 需安装 |
+| Windows (便携版) | `fuliba-chat-1.0.0-x64-portable.exe` | 免安装 |
+| Linux (AppImage) | `fuliba-chat-1.0.0-x86_64.AppImage` | 直接运行 |
+| Linux (deb) | `fuliba-chat-1.0.0-amd64.deb` | Debian/Ubuntu |
+| Linux (rpm) | `fuliba-chat-1.0.0-x86_64.rpm` | Fedora/CentOS |
 
 1. 下载对应平台的安装包
 2. macOS：打开 `.dmg`，拖动应用到「应用程序」文件夹
-3. Windows：双击 `.exe` 运行安装程序
-4. Linux：`chmod +x fuba-chat-1.0.0.AppImage && ./fuba-chat-1.0.0.AppImage`
+3. Windows：双击 `setup.exe` 运行安装程序，或下载 `portable.exe` 免安装直接运行
+4. Linux：`chmod +x fuliba-chat-1.0.0-x86_64.AppImage && ./fuliba-chat-1.0.0-x86_64.AppImage`
 
 > **注意**：macOS 首次打开可能提示"无法验证开发者"，右键点击应用 → 选择「打开」即可。
 
@@ -202,10 +205,10 @@ npm run build -- --linux
 ### 发布新版本
 
 1. 更新 `package.json` 中的 `version`
-2. 运行构建命令生成安装包
-3. 在 GitHub 创建新的 Release
-4. 上传对应平台的安装包
-5. 填写更新日志
+2. 提交代码并推送到 main 分支
+3. 打 tag 触发自动构建：`git tag -a v1.0.x -m "描述" && git push origin v1.0.x`
+4. GitHub Actions 自动构建三平台安装包并创建 Release
+5. Release 创建后为 draft 状态，确认无误后在 GitHub 页面点击发布
 
 ---
 
