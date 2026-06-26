@@ -7,9 +7,9 @@
     "start": "electron .",
     "build": "electron-builder -mwl",
     "pack": "electron-builder --dir",
-    "build:mac": "electron-builder --mac",
-    "build:win": "electron-builder --win",
-    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac --publish never",
+    "build:win": "electron-builder --win --publish never",
+    "build:linux": "electron-builder --linux --publish never",
     "build:all": "electron-builder -mwl"
   },
   "keywords": [
@@ -17,7 +17,10 @@
     "chat",
     "electron"
   ],
-  "author": "ysanyu",
+  "author": {
+    "name": "ysanyu",
+    "email": "ysanyu@users.noreply.github.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "electron": "^28.3.3",
