@@ -29,6 +29,7 @@
   "build": {
     "appId": "com.ysanyu.fuba-chat",
     "productName": "福利吧聊天室",
+    "artifactName": "${name}-${version}-${arch}.${ext}",
     "directories": {
       "output": "releases"
     },
@@ -67,7 +68,11 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
+      "createDesktopShortcut": true,
+      "artifactName": "${name}-${version}-${arch}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${name}-${version}-${arch}-portable.${ext}"
     },
     "dmg": {
       "contents": [

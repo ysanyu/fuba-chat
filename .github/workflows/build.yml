@@ -50,6 +50,7 @@ jobs:
 
       - name: List build outputs
         if: always()
+        shell: bash
         run: ls -lhR releases/ || true
 
       - name: Upload artifacts
