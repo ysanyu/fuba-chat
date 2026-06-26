@@ -120,6 +120,13 @@
 
     .guest-notice { padding: 20px; text-align: center; color: #94a3b8; font-size: 14px; }
     .guest-notice a { color: #667eea; cursor: pointer; }
+
+    /* 违规提示 */
+    .rule-notice {
+      padding: 10px 20px; background: #fff7ed; color: #c2410c;
+      border-bottom: 1px solid #fed7aa; font-size: 13px; line-height: 1.5;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -132,6 +139,10 @@
 <div class="reply-bar" id="replyBar">
   <span id="replyText"></span>
   <span class="reply-close" onclick="clearReply()">&times;</span>
+</div>
+
+<div class="rule-notice">
+  欢迎来到聊天室，发言请遵守论坛版规，违规用户将永久禁止使用聊天室功能哦~
 </div>
 
 <div class="messages" id="messages">
